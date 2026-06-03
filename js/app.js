@@ -1,5 +1,5 @@
 /**
- * FWPD SWAT | Global App Logic
+ * BPD SWAT | Global App Logic
  * Optimized for real-time reactivity and rank-based sorting.
  */
 
@@ -32,13 +32,6 @@ async function saveState(newState) {
 function recalculate(state) {
     if (!state || !state.roster) return;
     const roster = state.roster;
-    
-    // --- START RELEVANT CHANGE ---
-    // AUTO-SWAP: When roster hits 5+, automatically enable splitMode
-    if (roster.length >= 5 && !state.splitMode) {
-        state.splitMode = true;
-    }
-    // --- END RELEVANT CHANGE ---
     
     // 1. Separate into pools
     const cmdMembers = roster.filter(u => COMMAND_RANKS.includes(u.rank));
@@ -173,6 +166,29 @@ async function handleCheckin() {
 
     await saveState(state);
     document.getElementById("inputUsername").value = "";
+}
+
+async function handleCheckout() {
+    if (!currentUserId) return;
+    if (!confirm("Are you sure you want to sign off and leave this shift?")) return;
+
+    const state = await getState();
+    const leavingUnit = state.roster.find(u => u.id === currentUserId);
+    const username = leavingUnit ? leavingUnit.username : "A unit";
+
+    state.roster = state.roster.filter(u => u.id !== currentUserId);
+    
+    // Log user checkout event to Supabase
+    await sbClient.from('logs').insert([{ admin_name: "System", action: `${username} left the shift voluntarily.` }]);
+    
+    await saveState(state);
+
+    // Wipe session variables locally
+    currentUserId = null;
+    localStorage.removeItem("swat_session_id");
+    
+    // Force direct immediate UI refresh
+    renderPortal(state);
 }
 
 // REAL-TIME SYNC ENGINE

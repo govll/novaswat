@@ -1,5 +1,5 @@
 /**
- * FWPD SWAT | Admin Logic
+ * BPD SWAT | Admin Logic
  * Features: Manual Role Overrides, Activity Logging, and State Sync.
  */
 
@@ -51,10 +51,8 @@ async function toggleShift() {
         state.roster = [];
         state.splitMode = false;
     } else {
-        // --- START RELEVANT CHANGE ---
         // Ensure every new shift defaults to capacity 5
         state.maxUnits = 5;
-        // --- END RELEVANT CHANGE ---
     }
     await saveState(state);
     await addLog(state.shiftActive ? "SHIFT STARTED" : "SHIFT CLOSED / ROSTER RESET");
@@ -66,13 +64,6 @@ async function updateMaxUnits() {
     state.maxUnits = val;
     await saveState(state);
     await addLog(`MAX CAPACITY SET TO: ${val}`);
-}
-
-async function toggleSplitMode() {
-    const state = await getState();
-    state.splitMode = !state.splitMode;
-    await saveState(state);
-    await addLog(state.splitMode ? "FORCED MULTI-SQUAD" : "AUTO SQUAD ALLOCATION");
 }
 
 async function kickUnit(unitId, username) {
@@ -135,8 +126,6 @@ function syncAdminPanel(state) {
             `<option value="${u.id}">${u.username} (${u.callsign})</option>`
         ).join("");
     if (prevVal) select.value = prevVal;
-
-    document.getElementById("splitModeBtn").textContent = state.splitMode ? "Disable Multi-Squad" : "Enable Multi-Squad";
     
     // Ensure input reflects the current state (defaults to 5)
     if (document.getElementById("maxUnitsInput")) {

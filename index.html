@@ -80,6 +80,7 @@
                     <div class="callsign-display" id="displayCallsign">--</div>
                     <div class="role-display" id="displayRole">--</div>
                     <div id="displaySquad" style="font-size: 12px; color: #888; margin-top: 5px; font-family: 'Share Tech Mono';"></div>
+                    <button class="btn-danger-sm" onclick="handleCheckout()" style="width: 100%; margin-top: 1.5rem; padding: 10px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;">Leave Shift</button>
                 </div>
             </div>
         </div>
@@ -120,7 +121,6 @@
                         <label style="font-size: 11px; color: #888; display: block; margin-bottom: 5px;">SHIFT PARAMETERS</label>
                         <input type="number" id="maxUnitsInput" value="5" style="width: 50px; background: #000; border: 1px solid #333; color: #fff; padding: 4px;">
                         <button onclick="updateMaxUnits()" class="btn-primary" style="padding: 5px 10px; font-size: 10px;">SET MAX</button>
-                        <button onclick="toggleSplitMode()" id="splitModeBtn" class="btn-primary" style="padding: 5px 10px; font-size: 10px; margin-top: 5px; width: 100%;">Enable Multi-Squad</button>
                     </div>
                 </div>
 
